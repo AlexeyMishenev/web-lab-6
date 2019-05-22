@@ -21,7 +21,7 @@
     <module>database</module>
     <module>antibiotic-service</module>
     <module>deployment</module>
-<!--    <module>standalone</module>-->
+    <module>standalone</module>
 <!--    <module>client</module>-->
   </modules>
 
