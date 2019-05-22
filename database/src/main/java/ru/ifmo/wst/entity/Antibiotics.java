@@ -1,5 +1,6 @@
 package ru.ifmo.wst.entity;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@XmlRootElement
 public class Antibiotics {
   private Long id;
   private String name;
