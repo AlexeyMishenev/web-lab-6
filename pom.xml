@@ -22,7 +22,7 @@
     <module>antibiotic-service</module>
     <module>deployment</module>
     <module>standalone</module>
-<!--    <module>client</module>-->
+    <module>client</module>
   </modules>
 
   <dependencyManagement>

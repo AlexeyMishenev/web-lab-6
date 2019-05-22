@@ -41,8 +41,7 @@
   <dependencies>
     <dependency>
       <groupId>ru.ifmo.wst</groupId>
-      <artifactId>antibiotic-service</artifactId>
-      <classifier>client</classifier>
+      <artifactId>database</artifactId>
       <version>4.0</version>
     </dependency>
 
@@ -50,6 +49,17 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>
