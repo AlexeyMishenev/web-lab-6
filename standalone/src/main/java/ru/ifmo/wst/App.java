@@ -1,7 +1,7 @@
 package ru.ifmo.wst;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
-import com.sun.jersey.api.core.ClassNamesResourceConfig;
+import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
@@ -30,8 +30,8 @@ public class App {
     DataSource dataSource = initDataSource();
     AntibioticResource.STATIC_DAO = new AntibioticsDAO(dataSource);
 
-    ClassNamesResourceConfig resourceConfig = new ClassNamesResourceConfig(
-        AntibioticResource.class);
+    PackagesResourceConfig resourceConfig = new PackagesResourceConfig(
+        AntibioticResource.class.getPackage().getName());
 
     log.info("Start application");
 
