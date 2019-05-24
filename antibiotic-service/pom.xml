@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>web-lab-5</artifactId>
+    <artifactId>web-lab-6</artifactId>
     <groupId>ru.ifmo.wst</groupId>
-    <version>5.0</version>
+    <version>6.0</version>
   </parent>
 
   <artifactId>antibiotic-service</artifactId>
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>ru.ifmo.wst</groupId>
       <artifactId>database</artifactId>
-      <version>5.0</version>
+      <version>6.0</version>
     </dependency>
 
     <dependency>
