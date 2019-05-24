@@ -1,5 +1,8 @@
 package ru.ifmo.wst.rs;
 
+import static java.text.MessageFormat.format;
+
+import java.sql.SQLException;
 import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -13,7 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import lombok.SneakyThrows;
 import ru.ifmo.wst.dao.AntibioticsDAO;
 import ru.ifmo.wst.entity.Antibiotics;
 
@@ -33,32 +35,43 @@ public class AntibioticResource {
 
   @GET
   @Path("/all_rows")
-  @SneakyThrows
-  public List<Antibiotics> findAll() {
-    return antibioticsDAO.findAll();
+  public List<Antibiotics> findAll() throws ResourceException {
+    try {
+      return antibioticsDAO.findAll();
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
   @GET
   @Path("/all")
-  @SneakyThrows
-  public List<String> findAllAntibiotics() {
-    return antibioticsDAO.findAllAntibiotics();
+  public List<String> findAllAntibiotics() throws ResourceException {
+    try {
+      return antibioticsDAO.findAllAntibiotics();
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
   @GET
   @Path("/find")
-  @SneakyThrows
   public String findDosage(
       @QueryParam("name") String name,
       @QueryParam("method") String method,
-      @QueryParam("SKF") Integer skf) {
-    return antibioticsDAO.findDosage(name, method, skf);
+      @QueryParam("SKF") Integer skf) throws ResourceException {
+    try {
+      return antibioticsDAO.findDosage(name, method, skf);
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
 
   @GET
   @Path("/filter")
-  @SneakyThrows
   public List<Antibiotics> filter(
       @QueryParam("id") Long id,
       @QueryParam("name") String name,
@@ -66,36 +79,48 @@ public class AntibioticResource {
       @QueryParam("from") Integer from,
       @QueryParam("to") Integer to,
       @QueryParam("dosage") String dose,
-      @QueryParam("additional") String additional) {
-    return antibioticsDAO.filter(id, name, method, from, to, dose, additional);
+      @QueryParam("additional") String additional) throws ResourceException {
+    try {
+      return antibioticsDAO.filter(id, name, method, from, to, dose, additional);
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.TEXT_PLAIN)
-  @SneakyThrows
   public String create(
       @QueryParam("name") String name,
       @QueryParam("method") String method,
       @QueryParam("from") Integer from,
       @QueryParam("to") Integer to,
       @QueryParam("dosage") String dose,
-      @QueryParam("additional") String additional) {
-    return String.valueOf(antibioticsDAO.create(name, method, from, to, dose, additional));
+      @QueryParam("additional") String additional) throws ResourceException {
+    try {
+      return String.valueOf(antibioticsDAO.create(name, method, from, to, dose, additional));
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
   @DELETE
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/{id}")
-  @SneakyThrows
-  public String delete(@PathParam("id") long id) {
-    return String.valueOf(antibioticsDAO.delete(id));
+  public String delete(@PathParam("id") long id) throws ResourceException {
+    try {
+      return String.valueOf(antibioticsDAO.delete(id));
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
   @POST
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/{id}")
-  @SneakyThrows
   public String update(
       @QueryParam("id") Long id,
       @QueryParam("name") String name,
@@ -103,8 +128,13 @@ public class AntibioticResource {
       @QueryParam("from") Integer from,
       @QueryParam("to") Integer to,
       @QueryParam("dosage") String dosage,
-      @QueryParam("additional") String additional) {
-    return String.valueOf(antibioticsDAO.update(id, name, method, from, to, dosage, additional));
+      @QueryParam("additional") String additional) throws ResourceException {
+    try {
+      return String.valueOf(antibioticsDAO.update(id, name, method, from, to, dosage, additional));
+    } catch (SQLException e) {
+      throw new ResourceException(
+          format("SQL error: {0}; State:{1}", e.getMessage(), e.getSQLState()));
+    }
   }
 
 }
