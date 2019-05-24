@@ -24,7 +24,7 @@ public class App {
     String port = conf.get("port", "8081");
     String baseUrl = scheme + "//" + host + ":" + port;
 
-    String appName = conf.get("app.name", "standalone-lab4");
+    String appName = conf.get("app.name", "standalone-lab5");
     String appUrl = baseUrl + "/" + appName;
 
     DataSource dataSource = initDataSource();
