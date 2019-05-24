@@ -1,6 +1,7 @@
 package ru.ifmo.wst.client;
 
 
+import static java.text.MessageFormat.format;
 import static ru.ifmo.wst.client.Utils.readInt;
 import static ru.ifmo.wst.client.Utils.readLong;
 import static ru.ifmo.wst.client.Utils.readString;
@@ -10,10 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Objects;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class Client {
-  static AntibioticResourceClient antibioticClient;
+  private static AntibioticResourceClient antibioticClient;
 
   public static void main(String[] args) throws IOException {
     URL url = new URL(args[0]);
@@ -83,85 +83,82 @@ public class Client {
           curState = 0;
           break;
         case 5:
-          throw new NotImplementedException();
-//          System.out.println("\nЗаполните поля (* - обязательные)");
-//          String createName;
-//          do {
-//            System.out.println("* Название:");
-//            createName = readString(reader);
-//          } while (createName == null);
-//
-//          System.out.println("Метод введения:");
-//          String createMethod = readString(reader);
-//
-//          System.out.println("СКФ От (0 если пустое):");
-//          Integer createFrom = readInt(reader, 0);
-//          System.out.println("СКФ До (1000 если пустое):");
-//          Integer createTo = readInt(reader, 1000);
-//
-//          String createDosage;
-//          do {
-//            System.out.println("* Дозировка:");
-//            createDosage = readString(reader);
-//          } while (createDosage == null);
-//
-//          System.out.println("Дополнительно:");
-//          String createAdditional = readString(reader);
-//
-//          if (createAdditional != null && !createDosage.endsWith("*")) {
-//            createDosage += "*";
-//          }
-//          long createdId = antibioticPort.create(createName, createMethod,
-//              createFrom, createTo, createDosage, createAdditional);
-//          System.out.println("ID новой записи: " + createdId);
-//          curState = 0;
-//          break;
+          System.out.println("\nЗаполните поля (* - обязательные)");
+          String createName;
+          do {
+            System.out.println("* Название:");
+            createName = readString(reader);
+          } while (createName == null);
+
+          System.out.println("Метод введения:");
+          String createMethod = readString(reader);
+
+          System.out.println("СКФ От (0 если пустое):");
+          Integer createFrom = readInt(reader, 0);
+          System.out.println("СКФ До (1000 если пустое):");
+          Integer createTo = readInt(reader, 1000);
+
+          String createDosage;
+          do {
+            System.out.println("* Дозировка:");
+            createDosage = readString(reader);
+          } while (createDosage == null);
+
+          System.out.println("Дополнительно:");
+          String createAdditional = readString(reader);
+
+          if (createAdditional != null && !createDosage.endsWith("*")) {
+            createDosage += "*";
+          }
+          long createdId = antibioticClient.create(createName, createMethod,
+              createFrom, createTo, createDosage, createAdditional);
+          System.out.println(format("ID новой записи: {0}", createdId));
+          curState = 0;
+          break;
         case 6:
-          throw new NotImplementedException();
-//          Long updateId;
-//          do {
-//            System.out.println("id изменяемой записи (0 для отмены операции):");
-//            updateId = readLong(reader);
-//          } while (updateId == null);
-//
-//          if (updateId == 0L) {
-//            curState = 0;
-//            break;
-//          }
-//
-//          System.out.println("* Название:");
-//          String updateName = readString(reader);
-//          System.out.println("Метод введения:");
-//          String updateMethod = readString(reader);
-//          System.out.println("СКФ От (0 если пустое):");
-//          Integer updateFrom = readInt(reader, 0);
-//          System.out.println("СКФ До (1000 если пустое):");
-//          Integer updateTo = readInt(reader, 1000);
-//          System.out.println("* Дозировка:");
-//          String updateDosage = readString(reader);
-//          System.out.println("Дополнительно:");
-//          String updateAdditional = readString(reader);
-//
-//          long updateRes = antibioticPort.update(updateId,
-//              updateName, updateMethod, updateFrom, updateTo, updateDosage, updateAdditional);
-//          System.out.println("Изменено " + updateRes + " строк");
-//          curState = 0;
-//          break;
+          Long updateId;
+          do {
+            System.out.println("id изменяемой записи (0 для отмены операции):");
+            updateId = readLong(reader);
+          } while (updateId == null);
+
+          if (updateId == 0L) {
+            curState = 0;
+            break;
+          }
+
+          System.out.println("* Название:");
+          String updateName = readString(reader);
+          System.out.println("Метод введения:");
+          String updateMethod = readString(reader);
+          System.out.println("СКФ От (0 если пустое):");
+          Integer updateFrom = readInt(reader, 0);
+          System.out.println("СКФ До (1000 если пустое):");
+          Integer updateTo = readInt(reader, 1000);
+          System.out.println("* Дозировка:");
+          String updateDosage = readString(reader);
+          System.out.println("Дополнительно:");
+          String updateAdditional = readString(reader);
+
+          long updateRes = antibioticClient.update(updateId,
+              updateName, updateMethod, updateFrom, updateTo, updateDosage, updateAdditional);
+          System.out.println(format("Изменено {0} строк", updateRes));
+          curState = 0;
+          break;
         case 7:
-          throw new NotImplementedException();
-//          Long deleteId;
-//          do {
-//            System.out.println("id удаляемой записи (0 для отмены операции):");
-//            deleteId = readLong(reader);
-//          } while (deleteId == null);
-//          if (deleteId == 0L) {
-//            curState = 0;
-//            break;
-//          }
-//          int deleteRes = antibioticPort.delete(deleteId);
-//          System.out.println("Удалено " + deleteRes + " строк(а)");
-//          curState = 0;
-//          break;
+          Long deleteId;
+          do {
+            System.out.println("id удаляемой записи (0 для отмены операции):");
+            deleteId = readLong(reader);
+          } while (deleteId == null);
+          if (deleteId == 0L) {
+            curState = 0;
+            break;
+          }
+          long deleteRes = antibioticClient.delete(deleteId);
+          System.out.println(format("Удалено {0} строк(а)", deleteRes));
+          curState = 0;
+          break;
         case 8:
           return;
         default:
