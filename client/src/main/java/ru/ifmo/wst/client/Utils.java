@@ -75,4 +75,35 @@ class Utils {
 
     return value;
   }
+
+  static String readString(String header, BufferedReader reader) {
+    System.out.println(header);
+    return readString(reader, null);
+  }
+
+  static Integer readInt(String header, BufferedReader reader) {
+    System.out.println(header);
+    return readInt(reader, null);
+  }
+
+  static Long readLong(String header, BufferedReader reader) {
+    System.out.println(header);
+    return readLong(reader, null);
+  }
+
+  static String readString(String header, BufferedReader reader, String defaultValue) {
+    System.out.println(header);
+    return readString(reader, defaultValue);
+  }
+
+  static Integer readInt(String header, BufferedReader reader, Integer defaultValue) {
+    System.out.println(header);
+    return readInt(reader, defaultValue);
+  }
+
+  static Long readLong(String header, BufferedReader reader, Long defaultValue) {
+    System.out.println(header);
+    return readLong(reader, defaultValue);
+  }
+
 }

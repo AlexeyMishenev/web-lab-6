@@ -112,13 +112,10 @@ public class Client {
 
   private static void getDosageBySKF(BufferedReader reader) {
     System.out.println("\nЗаполните все поля");
+
     String name = readNotNullString("Название:", reader);
-
-    System.out.println("Метод введения:");
-    String method = readString(reader);
-
-    System.out.println("СКФ (мл/мин):");
-    Integer skf = readInt(reader);
+    String method = readString("Метод введения:", reader);
+    Integer skf = readInt("СКФ (мл/мин):", reader);
 
     Result<String> result = antibioticClient.findDosage(name, method, skf);
 
@@ -133,26 +130,13 @@ public class Client {
   private static void filter(BufferedReader reader) {
     System.out.println("\nЧтобы не применять фильтр, оставьте значение пустым");
 
-    System.out.println("id:");
-    Long id = readLong(reader);
-
-    System.out.println("Название:");
-    String name = readString(reader);
-
-    System.out.println("Метод введения:");
-    String method = readString(reader);
-
-    System.out.println("СКФ от:");
-    Integer from = readInt(reader);
-
-    System.out.println("СКФ до:");
-    Integer to = readInt(reader);
-
-    System.out.println("Дозировка:");
-    String dosage = readString(reader);
-
-    System.out.println("Дополнительное поле:");
-    String additional = readString(reader);
+    Long id = readLong("id:", reader);
+    String name = readString("Название:", reader);
+    String method = readString("Метод введения:", reader);
+    Integer from = readInt("СКФ от:", reader);
+    Integer to = readInt("СКФ до:", reader);
+    String dosage = readString("Дозировка:", reader);
+    String additional = readString("Дополнительно:", reader);
 
     Result<List<Antibiotics>> result = antibioticClient
         .filter(id, name, method, from, to, dosage, additional);
@@ -174,20 +158,13 @@ public class Client {
 
   private static void create(BufferedReader reader) {
     System.out.println("\nЗаполните поля (* - обязательные)");
+
     String name = readNotNullString("* Название:", reader);
-
-    System.out.println("Метод введения:");
-    String method = readString(reader);
-
-    System.out.println("СКФ От (0 если пустое):");
-    Integer from = readInt(reader, 0);
-    System.out.println("СКФ До (1000 если пустое):");
-    Integer to = readInt(reader, 1000);
-
+    String method = readString("Метод введения:", reader);
+    Integer from = readInt("СКФ От (0 если пустое):", reader, 0);
+    Integer to = readInt("СКФ До (1000 если пустое):", reader, 1000);
     String dosage = readNotNullString("* Дозировка:", reader);
-
-    System.out.println("Дополнительно:");
-    String additional = readString(reader);
+    String additional = readString("Дополнительно:", reader);
 
     if (additional != null && !dosage.endsWith("*")) {
       dosage += "*";
@@ -208,23 +185,12 @@ public class Client {
       return;
     }
 
-    System.out.println("* Название:");
-    String name = readString(reader);
-
-    System.out.println("Метод введения:");
-    String method = readString(reader);
-
-    System.out.println("СКФ От (0 если пустое):");
-    Integer from = readInt(reader, 0);
-
-    System.out.println("СКФ До (1000 если пустое):");
-    Integer to = readInt(reader, 1000);
-
-    System.out.println("* Дозировка:");
-    String dosage = readString(reader);
-
-    System.out.println("Дополнительно:");
-    String additional = readString(reader);
+    String name = readString("Название:", reader);
+    String method = readString("Метод введения:", reader);
+    Integer from = readInt("СКФ От (0 если пустое):", reader, 0);
+    Integer to = readInt("СКФ До (1000 если пустое):", reader, 100);
+    String dosage = readString("Дозировка:", reader);
+    String additional = readString("Дополнительно:", reader);
 
     Result<Long> result = antibioticClient.update(id, name, method, from, to, dosage, additional);
     if (result.isError()) {
