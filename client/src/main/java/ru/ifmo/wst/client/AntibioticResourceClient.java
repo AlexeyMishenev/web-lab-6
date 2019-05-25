@@ -22,6 +22,9 @@ class AntibioticResourceClient {
   private static final GenericType<List<Antibiotics>> ANTIBIOTICS_LIST = new GenericType<List<Antibiotics>>() {
   };
 
+  private static final GenericType<List<String>> STRING_LIST = new GenericType<List<String>>() {
+  };
+
   private static final GenericType<String> STRING = new GenericType<String>() {
   };
 
@@ -48,7 +51,7 @@ class AntibioticResourceClient {
     return response.getEntity(ANTIBIOTICS_LIST);
   }
 
-  List<Antibiotics> findAllAntibiotics() {
+  List<String> findAllAntibiotics() {
     ClientResponse response = rootResource
         .path("/all")
         .accept(APPLICATION_JSON_TYPE)
@@ -58,7 +61,7 @@ class AntibioticResourceClient {
       throw new IllegalStateException("Request failed");
     }
 
-    return response.getEntity(ANTIBIOTICS_LIST);
+    return response.getEntity(STRING_LIST);
   }
 
   List<Antibiotics> filter(Long id, String name, String method, Integer from, Integer to,
@@ -83,7 +86,7 @@ class AntibioticResourceClient {
     return response.getEntity(ANTIBIOTICS_LIST);
   }
 
-  List<Antibiotics> findDosage(String name, String method, Integer skf) {
+  String findDosage(String name, String method, Integer skf) {
     WebResource resource = rootResource;
     resource = addParam(resource, "name", name);
     resource = addParam(resource, "method", method);
@@ -97,7 +100,7 @@ class AntibioticResourceClient {
       throw new IllegalStateException("Request failed");
     }
 
-    return response.getEntity(ANTIBIOTICS_LIST);
+    return response.getEntity(STRING);
   }
 
   public Long create(String name, String method, Integer from, Integer to,
