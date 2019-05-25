@@ -4,6 +4,8 @@ package ru.ifmo.wst.client;
 import static java.text.MessageFormat.format;
 import static ru.ifmo.wst.client.Utils.readInt;
 import static ru.ifmo.wst.client.Utils.readLong;
+import static ru.ifmo.wst.client.Utils.readNotNullLong;
+import static ru.ifmo.wst.client.Utils.readNotNullString;
 import static ru.ifmo.wst.client.Utils.readString;
 
 import java.io.BufferedReader;
@@ -110,11 +112,7 @@ public class Client {
 
   private static void getDosageBySKF(BufferedReader reader) {
     System.out.println("\nЗаполните все поля");
-    String name;
-    do {
-      System.out.println("Название:");
-      name = readString(reader);
-    } while (name == null);
+    String name = readNotNullString("Название:", reader);
 
     System.out.println("Метод введения:");
     String method = readString(reader);
@@ -176,11 +174,7 @@ public class Client {
 
   private static void create(BufferedReader reader) {
     System.out.println("\nЗаполните поля (* - обязательные)");
-    String name;
-    do {
-      System.out.println("* Название:");
-      name = readString(reader);
-    } while (name == null);
+    String name = readNotNullString("* Название:", reader);
 
     System.out.println("Метод введения:");
     String method = readString(reader);
@@ -190,11 +184,7 @@ public class Client {
     System.out.println("СКФ До (1000 если пустое):");
     Integer to = readInt(reader, 1000);
 
-    String dosage;
-    do {
-      System.out.println("* Дозировка:");
-      dosage = readString(reader);
-    } while (dosage == null);
+    String dosage = readNotNullString("* Дозировка:", reader);
 
     System.out.println("Дополнительно:");
     String additional = readString(reader);
@@ -212,12 +202,7 @@ public class Client {
   }
 
   private static void update(BufferedReader reader) {
-    Long id;
-
-    do {
-      System.out.println("id изменяемой записи (0 для отмены операции):");
-      id = readLong(reader);
-    } while (id == null);
+    long id = readNotNullLong("id изменяемой записи (0 для отмены операции):", reader);
 
     if (id == 0L) {
       return;
@@ -250,11 +235,7 @@ public class Client {
   }
 
   private static void delete(BufferedReader reader) {
-    Long id;
-    do {
-      System.out.println("id удаляемой записи (0 для отмены операции):");
-      id = readLong(reader);
-    } while (id == null);
+    long id = readNotNullLong("id удаляемой записи (0 для отмены операции):", reader);
 
     if (id == 0L) {
       return;
