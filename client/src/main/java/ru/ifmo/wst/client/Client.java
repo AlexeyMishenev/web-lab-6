@@ -10,7 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Objects;
+import java.util.List;
+import ru.ifmo.wst.entity.Antibiotics;
 
 public class Client {
   private static AntibioticResourceClient antibioticClient;
@@ -74,124 +75,197 @@ public class Client {
   }
 
   private static void findAll() {
-    System.out.println("Найдено:");
-    antibioticClient.findAllAntibiotics().forEach(System.out::println);
+    Result<List<String>> result = antibioticClient.findAllAntibiotics();
+
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      List<String> drugs = result.getResult();
+
+      if (drugs.size() == 0) {
+        System.out.println("Ничего не найдено");
+      } else {
+        System.out.println("Найдено:");
+        drugs.forEach(System.out::println);
+      }
+    }
   }
 
   private static void findAllDosages() {
-    System.out.println("Найдено:");
-    antibioticClient.findAll().stream().map(Object::toString).forEach(System.out::println);
+    Result<List<Antibiotics>> result = antibioticClient.findAll();
+
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      List<Antibiotics> drugs = result.getResult();
+
+      if (drugs.size() == 0) {
+        System.out.println("Ничего не найдено");
+      } else {
+        System.out.println("Найдено:");
+        drugs.stream().map(Antibiotics::toString).forEach(System.out::println);
+      }
+    }
   }
 
   private static void getDosageBySKF(BufferedReader reader) {
     System.out.println("\nЗаполните все поля");
-    String findName;
+    String name;
     do {
       System.out.println("Название:");
-      findName = readString(reader);
-    } while (findName == null);
+      name = readString(reader);
+    } while (name == null);
 
     System.out.println("Метод введения:");
-    String findMethod = readString(reader);
+    String method = readString(reader);
 
     System.out.println("СКФ (мл/мин):");
     Integer skf = readInt(reader);
 
-    System.out.println("Найдено:");
-    System.out.println(antibioticClient.findDosage(findName, findMethod, skf));
+    Result<String> result = antibioticClient.findDosage(name, method, skf);
+
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      System.out.println("Найдено:");
+      System.out.println(result.getResult());
+    }
   }
 
   private static void filter(BufferedReader reader) {
     System.out.println("\nЧтобы не применять фильтр, оставьте значение пустым");
+
     System.out.println("id:");
     Long id = readLong(reader);
+
     System.out.println("Название:");
     String name = readString(reader);
+
     System.out.println("Метод введения:");
     String method = readString(reader);
+
     System.out.println("СКФ от:");
     Integer from = readInt(reader);
+
     System.out.println("СКФ до:");
     Integer to = readInt(reader);
-    System.out.println("Найдено:");
-    antibioticClient.filter(id, name, method, from, to, null, null).stream()
-        .map(Objects::toString).forEach(System.out::println);
+
+    System.out.println("Дозировка:");
+    String dosage = readString(reader);
+
+    System.out.println("Дополнительное поле:");
+    String additional = readString(reader);
+
+    Result<List<Antibiotics>> result = antibioticClient
+        .filter(id, name, method, from, to, dosage, additional);
+
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      List<Antibiotics> drugs = result.getResult();
+
+      if (drugs.size() == 0) {
+        System.out.println("Ничего не найдено");
+      } else {
+        System.out.println("Найдено:");
+        drugs.stream().map(Antibiotics::toString).forEach(System.out::println);
+      }
+    }
+
   }
 
   private static void create(BufferedReader reader) {
     System.out.println("\nЗаполните поля (* - обязательные)");
-    String createName;
+    String name;
     do {
       System.out.println("* Название:");
-      createName = readString(reader);
-    } while (createName == null);
+      name = readString(reader);
+    } while (name == null);
 
     System.out.println("Метод введения:");
-    String createMethod = readString(reader);
+    String method = readString(reader);
 
     System.out.println("СКФ От (0 если пустое):");
-    Integer createFrom = readInt(reader, 0);
+    Integer from = readInt(reader, 0);
     System.out.println("СКФ До (1000 если пустое):");
-    Integer createTo = readInt(reader, 1000);
+    Integer to = readInt(reader, 1000);
 
-    String createDosage;
+    String dosage;
     do {
       System.out.println("* Дозировка:");
-      createDosage = readString(reader);
-    } while (createDosage == null);
+      dosage = readString(reader);
+    } while (dosage == null);
 
     System.out.println("Дополнительно:");
-    String createAdditional = readString(reader);
+    String additional = readString(reader);
 
-    if (createAdditional != null && !createDosage.endsWith("*")) {
-      createDosage += "*";
+    if (additional != null && !dosage.endsWith("*")) {
+      dosage += "*";
     }
-    long createdId = antibioticClient.create(createName, createMethod,
-        createFrom, createTo, createDosage, createAdditional);
-    System.out.println(format("ID новой записи: {0}", createdId));
+
+    Result<Long> result = antibioticClient.create(name, method, from, to, dosage, additional);
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      System.out.println(format("ID новой записи: {0}", result.getResult()));
+    }
   }
 
   private static void update(BufferedReader reader) {
-    Long updateId;
+    Long id;
 
     do {
       System.out.println("id изменяемой записи (0 для отмены операции):");
-      updateId = readLong(reader);
-    } while (updateId == null);
+      id = readLong(reader);
+    } while (id == null);
 
-    if (updateId == 0L) {
+    if (id == 0L) {
       return;
     }
 
     System.out.println("* Название:");
-    String updateName = readString(reader);
-    System.out.println("Метод введения:");
-    String updateMethod = readString(reader);
-    System.out.println("СКФ От (0 если пустое):");
-    Integer updateFrom = readInt(reader, 0);
-    System.out.println("СКФ До (1000 если пустое):");
-    Integer updateTo = readInt(reader, 1000);
-    System.out.println("* Дозировка:");
-    String updateDosage = readString(reader);
-    System.out.println("Дополнительно:");
-    String updateAdditional = readString(reader);
+    String name = readString(reader);
 
-    long updateRes = antibioticClient.update(updateId,
-        updateName, updateMethod, updateFrom, updateTo, updateDosage, updateAdditional);
-    System.out.println(format("Изменено {0} строк", updateRes));
+    System.out.println("Метод введения:");
+    String method = readString(reader);
+
+    System.out.println("СКФ От (0 если пустое):");
+    Integer from = readInt(reader, 0);
+
+    System.out.println("СКФ До (1000 если пустое):");
+    Integer to = readInt(reader, 1000);
+
+    System.out.println("* Дозировка:");
+    String dosage = readString(reader);
+
+    System.out.println("Дополнительно:");
+    String additional = readString(reader);
+
+    Result<Long> result = antibioticClient.update(id, name, method, from, to, dosage, additional);
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      System.out.println(format("Изменено {0} строк(а)", result.getResult()));
+    }
   }
 
   private static void delete(BufferedReader reader) {
-    Long deleteId;
+    Long id;
     do {
       System.out.println("id удаляемой записи (0 для отмены операции):");
-      deleteId = readLong(reader);
-    } while (deleteId == null);
-    if (deleteId == 0L) {
+      id = readLong(reader);
+    } while (id == null);
+
+    if (id == 0L) {
       return;
     }
-    long deleteRes = antibioticClient.delete(deleteId);
-    System.out.println(format("Удалено {0} строк(а)", deleteRes));
+
+    Result<Long> result = antibioticClient.delete(id);
+    if (result.isError()) {
+      System.err.println(result.getErrorMessage());
+    } else {
+      System.out.println(format("Удалено {0} строк(а)", result.getResult()));
+    }
   }
 
   private static int readState(int cur, BufferedReader reader) {

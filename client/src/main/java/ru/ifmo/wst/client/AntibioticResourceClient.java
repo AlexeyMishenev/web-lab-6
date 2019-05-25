@@ -3,6 +3,8 @@ package ru.ifmo.wst.client;
 import static com.sun.jersey.api.client.ClientResponse.Status.OK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN_TYPE;
+import static ru.ifmo.wst.client.Result.error;
+import static ru.ifmo.wst.client.Result.ok;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -38,33 +40,33 @@ class AntibioticResourceClient {
     this.rootResource = Client.create().resource(url());
   }
 
-  List<Antibiotics> findAll() {
+  Result<List<Antibiotics>> findAll() {
     ClientResponse response = rootResource
         .path("/all_rows")
         .accept(APPLICATION_JSON_TYPE)
         .get(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return response.getEntity(ANTIBIOTICS_LIST);
+    return ok(response.getEntity(ANTIBIOTICS_LIST));
   }
 
-  List<String> findAllAntibiotics() {
+  Result<List<String>> findAllAntibiotics() {
     ClientResponse response = rootResource
         .path("/all")
         .accept(APPLICATION_JSON_TYPE)
         .get(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return response.getEntity(STRING_LIST);
+    return ok(response.getEntity(STRING_LIST));
   }
 
-  List<Antibiotics> filter(Long id, String name, String method, Integer from, Integer to,
+  Result<List<Antibiotics>> filter(Long id, String name, String method, Integer from, Integer to,
       String dose, String additional) {
     WebResource resource = rootResource;
     resource = addParam(resource, "id", id);
@@ -80,13 +82,13 @@ class AntibioticResourceClient {
         .get(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return response.getEntity(ANTIBIOTICS_LIST);
+    return ok(response.getEntity(ANTIBIOTICS_LIST));
   }
 
-  String findDosage(String name, String method, Integer skf) {
+  Result<String> findDosage(String name, String method, Integer skf) {
     WebResource resource = rootResource;
     resource = addParam(resource, "name", name);
     resource = addParam(resource, "method", method);
@@ -97,13 +99,13 @@ class AntibioticResourceClient {
         .get(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return response.getEntity(STRING);
+    return ok(response.getEntity(STRING));
   }
 
-  public Long create(String name, String method, Integer from, Integer to,
+  Result<Long> create(String name, String method, Integer from, Integer to,
       String dose, String additional) {
 
     WebResource resource = rootResource;
@@ -119,14 +121,14 @@ class AntibioticResourceClient {
         .put(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return Long.parseLong(response.getEntity(STRING));
+    return ok(Long.parseLong(response.getEntity(STRING)));
 
   }
 
-  public Long update(long id, String name, String method, Integer from, Integer to,
+  Result<Long> update(long id, String name, String method, Integer from, Integer to,
       String dose, String additional) {
 
     WebResource resource = rootResource;
@@ -143,23 +145,23 @@ class AntibioticResourceClient {
         .post(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return Long.parseLong(response.getEntity(STRING));
+    return ok(Long.parseLong(response.getEntity(STRING)));
   }
 
-  public long delete(long id) {
+  Result<Long> delete(long id) {
     ClientResponse response = rootResource
         .path(String.valueOf(id))
         .accept(TEXT_PLAIN_TYPE)
         .delete(ClientResponse.class);
 
     if (response.getStatus() != OK.getStatusCode()) {
-      throw new IllegalStateException("Request failed");
+      return error(response.getEntity(STRING));
     }
 
-    return Long.parseLong(response.getEntity(STRING));
+    return ok(Long.parseLong(response.getEntity(STRING)));
   }
 
   private String url(String endpointAddress) {
